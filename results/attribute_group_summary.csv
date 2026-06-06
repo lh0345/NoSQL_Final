@@ -1,0 +1,11 @@
+attribute,group,avg_rating,count
+RestaurantsDelivery,Yes / Present,3.406155911053071,27567
+RestaurantsDelivery,No / Absent,3.6370016425265046,20091
+RestaurantsTakeOut,Yes / Present,3.510984531311974,45382
+RestaurantsTakeOut,No / Absent,3.5061469265367315,3335
+OutdoorSeating,Yes / Present,3.6477892944769916,19971
+OutdoorSeating,No / Absent,3.428007097891757,23669
+RestaurantsReservations,Yes / Present,3.652643980871855,14429
+RestaurantsReservations,No / Absent,3.407295044809429,28677
+GoodForKids,Yes / Present,3.45257331799885,34780
+GoodForKids,No / Absent,3.4837824753913185,6197
