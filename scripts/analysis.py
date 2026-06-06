@@ -31,14 +31,18 @@ GENERIC_CATEGORIES = [
 BOOL_TRUE = ["true", "yes", "free", "full_bar", "beer_and_wine", "valet"]
 BOOL_FALSE = ["false", "no", "none", "nope"]
 
+# --- Folder setup ---
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_DIR = os.path.dirname(SCRIPT_DIR)            # one level up = project root
-RESULTS_DIR = os.path.join(PROJECT_DIR, "results")
+PROJECT_DIR = os.path.dirname(SCRIPT_DIR)          # one level up = project root
+RESULTS_DIR = os.path.join(PROJECT_DIR, "results")   # for charts
+REPORT_DIR  = os.path.join(PROJECT_DIR, "report")    # for CSVs
 os.makedirs(RESULTS_DIR, exist_ok=True)
+os.makedirs(REPORT_DIR, exist_ok=True)
 
 print(f"Script location   : {SCRIPT_DIR}")
 print(f"Project root      : {PROJECT_DIR}")
-print(f"Results will go to: {RESULTS_DIR}")
+print(f"Charts → {RESULTS_DIR}")
+print(f"CSVs   → {REPORT_DIR}")
 
 # ============================================================
 # PLOTTING HELPERS
@@ -177,7 +181,7 @@ review_df = pd.DataFrame(list(col.find(
 )))
 
 # ============================================================
-# PLOT & SAVE
+# PLOT & SAVE (charts → results/, CSVs → report/)
 # ============================================================
 print("\nGenerating charts...")
 
@@ -186,14 +190,14 @@ if not cat_df.empty:
     top_cat = cat_df.head(10).copy()
     save_horizontal_bar(top_cat["category"][::-1].tolist(), top_cat["avg_rating"][::-1].tolist(),
                         "Top 10 Restaurant Categories by Average Rating", "Average Rating", "top_categories.png")
-    cat_df.to_csv(os.path.join(RESULTS_DIR, "category_summary.csv"), index=False)
+    cat_df.to_csv(os.path.join(REPORT_DIR, "category_summary.csv"), index=False)
 
 # Cities (top 10)
 if not city_df.empty:
     top_city = city_df.head(10).copy()
     save_horizontal_bar(top_city["city"][::-1].tolist(), top_city["avg_rating"][::-1].tolist(),
                         "Top 10 Cities by Average Restaurant Rating", "Average Rating", "top_cities.png")
-    city_df.to_csv(os.path.join(RESULTS_DIR, "city_summary.csv"), index=False)
+    city_df.to_csv(os.path.join(REPORT_DIR, "city_summary.csv"), index=False)
 
 # Attribute effects
 if not attr_effect_df.empty:
@@ -215,8 +219,8 @@ if not attr_effect_df.empty:
     plt.savefig(attr_path, dpi=200, bbox_inches="tight")
     plt.show()
     print(f"Saved: {attr_path}")
-    attr_effect_df.to_csv(os.path.join(RESULTS_DIR, "attribute_effect_summary.csv"), index=False)
-    attr_group_df.to_csv(os.path.join(RESULTS_DIR, "attribute_group_summary.csv"), index=False)
+    attr_effect_df.to_csv(os.path.join(REPORT_DIR, "attribute_effect_summary.csv"), index=False)
+    attr_group_df.to_csv(os.path.join(REPORT_DIR, "attribute_group_summary.csv"), index=False)
 
 # Scatter: review count vs rating
 if not review_df.empty:
@@ -234,5 +238,6 @@ if not review_df.empty:
     print(f"Saved: {scatter_path}")
 
 print("\n" + "="*60)
-print(f"All results saved in: {RESULTS_DIR}")
+print(f"Charts saved in : {RESULTS_DIR}")
+print(f"CSVs saved in   : {REPORT_DIR}")
 print("="*60)
