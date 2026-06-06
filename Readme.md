@@ -1,36 +1,30 @@
+# Yelp Data Migration: SQL → MongoDB
 
-## Technologies & NoSQL Concepts
+## Overview
+This project migrates the Yelp Academic Dataset from a relational (SQLite) database to MongoDB, applying meaningful transformations. The pipeline includes data validation and a visualization layer built on the NoSQL side.
 
-### MongoDB
-- **Document model**: `attributes` stored as nested documents, `categories` as arrays
-- **Indexes**: Created on `categories`, `city`, `review_count`, `stars`, and individual attribute fields for fast queries
-- **Aggregation pipelines**: Used exclusively for all analytical computations:
-  - `$match` → filter restaurants
-  - `$unwind` → split category arrays
-  - `$group` → compute averages and counts
-  - `$sort`, `$addFields`, `$switch` for clean output
-- **No pandas groupby** was used for the core analysis
+## Project Structure
+├── data/ # ignored by Git – contains raw JSON and SQLite DB
+├── scripts/
+│ ├── setup_rdbms.py # create relational schema
+│ ├── populate_rdbms.py # load JSON data into SQLite
+│ ├── migrate.py # migration script (SQL → MongoDB with transformations)
+│ ├── validate.py # data validation checks
+│ └── analysis.py # visualization layer (reads from MongoDB)
+├── results/ # generated charts (PNG)
+├── report/ # exported CSV files
+├── ER_diagram.png # (add your ER diagram)
+└── README.md
 
-### Python (pymongo, pandas, matplotlib)
-- Connects to MongoDB, executes the aggregation pipelines
-- Converts the small aggregation results into DataFrames for easy plotting
-- Generates charts and exports CSVs
-
-## Analysis Performed
-
-1. **Category Analysis** – Top restaurant categories by average rating (minimum 250 businesses)
-2. **City Analysis** – Top cities by average restaurant rating (minimum 200 restaurants)
-3. **Attribute Effects** – Rating difference for restaurants that have vs. do not have features like delivery, outdoor seating, reservations, etc.
-4. **Review Count vs Rating** – Scatter plot (log scale) showing the relationship between popularity and rating
-
-## How to Run
-
-1. **Set up MongoDB** (local instance on default port 27017)
-2. **Import the Yelp business dataset** into the `yelp_analysis` database, collection `businesses`
-3. **Clean the data** (run once):
-   - Convert `attributes` from string to sub-document
-   - Convert `categories` from comma-separated string to array
-4. **Run the analysis**:
+## Setup & Run
+1. Install dependencies: `pymongo`, `pandas`, `matplotlib`, `sqlite3` (standard).
+2. Place `business.json` and `review.json` in the `data/` folder.
+3. Run the pipeline:
    ```bash
    cd scripts
+   python setup_rdbms.py
+   python populate_rdbms.py
+   python migrate.py
+   python validate.py
    python analysis.py
+4. View charts in results/, CSVs in report/, and validation output in console.
